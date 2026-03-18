@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ShopSmart AI</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+body{font-family:Inter}
+
+.gradient-text{
+background:linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+</style>
+
+</head>
+
+<body class="bg-gray-50">
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+const {useState}=React
+
+/* ================= API CONFIG ================= */
+
+const OPENROUTER_API_KEY = "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"
+
+const OPENROUTER_ENDPOINT =
+"https://openrouter.ai/api/v1/chat/completions"
+
+
+/* ================= NAVBAR ================= */
+
+function Navbar(){
+
+return(
+
+<nav className="bg-white shadow-sm">
+
+<div className="max-w-6xl mx-auto px-6 py-3 flex justify-between items-center">
+
+<div className="flex items-center gap-2 text-xl font-bold text-indigo-600">
+🛍️ ShopSmart
+</div>
+
+<div className="hidden md:flex gap-8 text-gray-600 font-medium">
+<a href="#">Home</a>
+<a href="#">Products</a>
+<a href="#">Deals</a>
+<a href="#">About</a>
+<a href="#">Contact</a>
+</div>
+
+<div className="flex items-center gap-4">
+
+<span>🔍</span>
+
+<span className="relative">
+❤️
+<span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs px-1 rounded-full">2</span>
+</span>
+
+<span className="relative">
+🛒
+<span className="absolute -top-2 -right-2 bg-indigo-500 text-white text-xs px-1 rounded-full">3</span>
+</span>
+
+<button className="bg-indigo-600 text-white px-4 py-2 rounded-xl">
+Sign In
+</button>
+
+</div>
+
+</div>
+
+</nav>
+
+)
+
+}
+
+
+/* ================= HERO ================= */
+
+function Hero(){
+
+return(
+
+<section className="py-20 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50">
+
+<div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+
+<div>
+
+<span className="bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full text-sm">
+🚀 AI-Powered Shopping
+</span>
+
+<h1 className="text-5xl font-extrabold mt-4 leading-tight">
+
+Shop Smarter with
+<br/>
+
+<span className="gradient-text">
+AI-Powered Deals
+</span>
+
+</h1>
+
+<p className="text-gray-600 mt-6 text-lg">
+
+Discover thousands of products, get personalized
+recommendations, and chat with our AI assistant
+24/7.
+
+</p>
+
+<div className="flex gap-4 mt-8">
+
+<button className="bg-indigo-600 text-white px-8 py-4 rounded-2xl shadow hover:scale-105 transition">
+🛒 Shop Now
+</button>
+
+<button className="border px-8 py-4 rounded-2xl text-indigo-600">
+💬 Chat with AI
+</button>
+
+</div>
+
+<div className="flex gap-6 text-gray-500 mt-8">
+
+<span>✅ Free returns</span>
+<span>🚚 Fast delivery</span>
+<span>🔒 Secure checkout</span>
+
+</div>
+
+</div>
+
+<div className="flex justify-center">
+
+<div className="bg-white p-8 rounded-2xl shadow-xl text-center w-80">
+
+<div className="text-5xl mb-4">🛍️</div>
+
+<h2 className="font-bold text-xl">
+Your AI Shopping Buddy
+</h2>
+
+<p className="text-gray-500 mt-2">
+Ask me anything about our products!
+</p>
+
+<div className="text-yellow-400 text-xl mt-4">
+★★★★★
+</div>
+
+<p className="text-gray-400 text-sm mt-2">
+50K+ happy customers
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+)
+
+}
+
+
+/* ================= STATS ================= */
+
+function Stats(){
+
+return(
+
+<section className="bg-indigo-600 text-white py-10">
+
+<div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 text-center gap-6">
+
+<div>
+<h2 className="text-3xl font-bold">50K+</h2>
+<p>Happy Customers</p>
+</div>
+
+<div>
+<h2 className="text-3xl font-bold">10K+</h2>
+<p>Products Listed</p>
+</div>
+
+<div>
+<h2 className="text-3xl font-bold">99%</h2>
+<p>Satisfaction Rate</p>
+</div>
+
+<div>
+<h2 className="text-3xl font-bold">24/7</h2>
+<p>AI Support</p>
+</div>
+
+</div>
+
+</section>
+
+)
+
+}
+
+
+/* ================= AI CHATBOT ================= */
+
+function ChatBot(){
+
+const [open,setOpen]=useState(false)
+const [messages,setMessages]=useState([])
+const [input,setInput]=useState("")
+
+async function send(){
+
+if(!input) return
+
+setMessages(m=>[...m,{role:"user",content:input}])
+
+const res = await fetch(OPENROUTER_ENDPOINT,{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer "+OPENROUTER_API_KEY
+},
+body:JSON.stringify({
+model:"meta-llama/llama-3-8b-instruct",
+messages:[
+{role:"system",content:"You are an ecommerce assistant"},
+{role:"user",content:input}
+]
+})
+})
+
+const data = await res.json()
+
+const reply =
+data?.choices?.[0]?.message?.content ||
+"⚠️ API Error"
+
+setMessages(m=>[...m,{role:"assistant",content:reply}])
+
+setInput("")
+
+}
+
+return(
+
+<>
+
+<button
+onClick={()=>setOpen(!open)}
+className="fixed bottom-6 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg">
+
+💬
+
+</button>
+
+{open && (
+
+<div className="fixed bottom-24 right-6 bg-white w-80 shadow-xl rounded-xl flex flex-col">
+
+<div className="bg-indigo-600 text-white p-3 rounded-t-xl">
+AI Assistant
+</div>
+
+<div className="p-3 h-64 overflow-y-auto text-sm">
+
+{messages.map((m,i)=>(
+<div key={i} className={m.role==="user"?"text-right":"text-left"}>
+<span className="inline-block bg-gray-100 p-2 rounded my-1">
+{m.content}
+</span>
+</div>
+))}
+
+</div>
+
+<div className="flex border-t">
+
+<input
+value={input}
+onChange={e=>setInput(e.target.value)}
+placeholder="Ask about products..."
+className="flex-1 p-2 outline-none"
+/>
+
+<button
+onClick={send}
+className="bg-indigo-600 text-white px-4">
+Send
+</button>
+
+</div>
+
+</div>
+
+)}
+
+</>
+
+)
+
+}
+
+
+/* ================= APP ================= */
+
+function App(){
+
+return(
+
+<div>
+
+<Navbar/>
+
+<Hero/>
+
+<Stats/>
+
+<ChatBot/>
+
+</div>
+
+)
+
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>)
+
+</script>
+
+</body>
+
+</html>
