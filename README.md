@@ -25,8 +25,8 @@ An interactive and modern e-commerce web application featuring an AI-powered cha
 
 ## 🔗 Live Demo
 
-👉 **Live Link:** _Add your deployed link here_  
-👉 **GitHub Repo:** https://github.com/your-username/your-repo-name
+👉 **Live Link:** _https://jagdaleradhika6-glitch.github.io/Smart-chatbot-for-Ecommerce/ 
+👉 **GitHub Repo:** https://jagdaleradhika6-glitch.github.io/Smart-chatbot-for-Ecommerce/
 
 ---
 
@@ -39,8 +39,5 @@ An interactive and modern e-commerce web application featuring an AI-powered cha
 
 ---
 
-## ⚙️ Setup Instructions
 
-1. Clone the repository
-```bash
-git clone https://github.com/your-username/your-repo-name.git
+
